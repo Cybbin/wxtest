@@ -76,8 +76,8 @@
                 format:'json'
             },
             success:function(data){
-                $('#userImg').src = data.query.results.json['headimgurl'];
-                $('#nickName').html(data.query.results.json['nickname']);
+                document.getElementById('userImg').src = data.query.results.json['headimgurl'];
+                document.getElementById('nickName').innerHTML = data.query.results.json['nickname'];
             }
         })
     }
