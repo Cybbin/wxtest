@@ -7,17 +7,48 @@
 <body>
 
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+<script type="text/javascript" src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 <script>
     //var appId = 'wx552fa866ced51ab8';
-    var appId = 'wxcb9d5fb41326eca7';
+    var appId = 'wxcb9d5fb41326eca7'; // 测试appid
+    var secret = '621541c1e174c95bc4ccfa5386f70008'; // 测试secret
 
     var targetUrl = 'http://cybbin.com/wxtest/index.html';
-    alert(encodeURIComponent(targetUrl));
-    window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='
-        + appId +'&redirect_uri='
-        + encodeURIComponent(targetUrl)
-        +'&response_type=code&scope=snsapi_userinfo#wechat_redirect';
 
+    var code = getUrlParam('code');
+    if (code) {
+        getOpenId(code);
+    } else {
+        window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appId
+            +'&redirect_uri=' + encodeURI(targetUrl)
+            +'&response_type=code&scope=snsapi_userinfo#wechat_redirect';
+    }
+
+    // 获取参数
+    function getUrlParam (name) {
+        var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) {
+            return decodeURI(r[2]);
+        }
+        return null;
+    }
+    // 获取openId
+    function getOpenId (code) {
+        var url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + appId
+            + '&secret=' + secret
+            + '&code=' + code
+            +'&grant_type=authorization_code';
+
+        $.ajax({
+            url: 'url',
+            dataType: 'json',
+            type: 'get',
+            success: function (res) {
+                console.log(res);
+            }
+        });
+    }
 </script>
 </body>
 </html>
