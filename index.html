@@ -12,6 +12,7 @@
     //var appId = 'wx552fa866ced51ab8';
     var appId = 'wxcb9d5fb41326eca7'; // 测试appid
     var secret = '621541c1e174c95bc4ccfa5386f70008'; // 测试secret
+    var openId,accessToken;
 
     var targetUrl = 'http://cybbin.com/wxtest/index.html';
 
@@ -33,7 +34,7 @@
         }
         return null;
     }
-    // 获取openId
+    // 获取 openId 和 access_token
     function getOpenId (code) {
         var url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + appId
             + '&secret=' + secret
@@ -48,9 +49,37 @@
                 format:'json'
             },
             success:function(data){
-                console.log(data)
+                openId = data.query.results.json.openid;
+                accessToken = data.query.results.json['access_token'];
+                // accessToken = getAccessToken(data.query.results.json['refresh_token']);
+
             }
         })
+    }
+    // 获取用户信息
+    function getUserInfo (openId, accessToken) {
+        var url = 'https://api.weixin.qq.com/sns/userinfo?access_token=' + accessToken
+            + '&openid=' + openId + '&lang=zh_CN';
+        $.ajax({
+            url:'http://query.yahooapis.com/v1/public/yql',
+            dataType:'jsonp',
+            data:{
+                q:"select*from json where url=\'" + url + "'",
+                format:'json'
+            },
+            success:function(data){
+                console.log(data);
+            }
+        })
+    }
+
+    }
+    // 获取access_token
+    function getAccessToken (refreshToken) {
+        var url = 'https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=' + addId
+            + '&grant_type=refresh_token'
+            + '&refresh_token=' + refreshToken;
+
     }
 </script>
 </body>
