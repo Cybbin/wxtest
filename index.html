@@ -41,13 +41,16 @@
             +'&grant_type=authorization_code';
 
         $.ajax({
-            url: url,
-            dataType: 'json',
-            type: 'get',
-            success: function (res) {
-                console.log(res);
+            url:'http://query.yahooapis.com/v1/public/yql',
+            dataType:'jsonp',
+            data:{
+                q:"select*from json where url=\'" + url + "'",
+                format:'json'
+            },
+            success:function(data){
+                console.log(data)
             }
-        });
+        })
     }
 </script>
 </body>
