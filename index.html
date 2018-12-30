@@ -10,11 +10,12 @@
 <script>
     var appId = 'wx552fa866ced51ab8';
     var targetUrl = 'http://cybbin.com/wxtest/index.html';
-    alert(encodeURI(targetUrl));
+    alert(encodeURIComponent(targetUrl));
     window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='
         + appId +'&redirect_uri='
-        + encodeURI(targetUrl)
+        + encodeURIComponent(targetUrl)
         +'&response_type=code&scope=snsapi_userinfo#wechat_redirect';
+
 </script>
 </body>
 </html>
