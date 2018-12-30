@@ -52,7 +52,7 @@
                 openId = data.query.results.json.openid;
                 accessToken = data.query.results.json['access_token'];
                 // accessToken = getAccessToken(data.query.results.json['refresh_token']);
-
+                getUserInfo(openId, accessToken);
             }
         })
     }
