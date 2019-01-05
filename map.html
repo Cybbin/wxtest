@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Place Search Pagination</title>
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            /*height: 100%;*/
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #panel select, #right-panel input {
+            font-size: 15px;
+        }
+
+        #panel select {
+            width: 100%;
+        }
+
+        #panel i {
+            font-size: 12px;
+        }
+        #panel {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #fff;
+        }
+        h2 {
+            font-size: 22px;
+            margin: 0 0 5px 0;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: scroll;
+        }
+        li {
+            background-color: #f1f1f1;
+            padding: 10px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        li:nth-child(odd) {
+            background-color: #fcfcfc;
+        }
+        #more {
+            width: 100%;
+            margin: 5px 0 0 0;
+        }
+        #input{
+            height:50px;
+            line-height:50px;
+            border:1px solid #000;
+            margin-bottom:100px;
+        }
+    </style>
+    <script>
+        var map;
+
+        function initMap() {
+            // Create the map.
+            navigator.geolocation.getCurrentPosition(function(position){
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+
+                var pyrmont = {lat: lat, lng: lng};
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: pyrmont,
+                    zoom: 17
+                });
+
+                // Create the places service.
+                var service = new google.maps.places.PlacesService(map);
+                var getNextPage = null;
+                var moreButton = document.getElementById('more');
+                // moreButton.onclick = function() {
+                //     moreButton.disabled = true;
+                //     if (getNextPage) getNextPage();
+                // };
+
+                // Perform a nearby search.
+                service.nearbySearch(
+                    {location: pyrmont, radius: 500, type: ['store']},
+                    function(results, status, pagination) {
+                        if (status !== 'OK') return;
+                        console.log(results);
+
+                        createMarkers(results);
+                        moreButton.disabled = !pagination.hasNextPage;
+                        getNextPage = pagination.hasNextPage && function() {
+                            pagination.nextPage();
+                        };
+                    });
+            });
+        }
+
+        function createMarkers(places) {
+            var bounds = new google.maps.LatLngBounds();
+            var placesList = document.getElementById('places');
+
+            for (var i = 0, place; place = places[i]; i++) {
+                var image = {
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25)
+                };
+
+                var marker = new google.maps.Marker({
+                    map: map,
+                    icon: image,
+                    title: place.name,
+                    position: place.geometry.location
+                });
+
+                var li = document.createElement('li');
+                li.textContent = place.name;
+                placesList.appendChild(li);
+
+                bounds.extend(place.geometry.location);
+            }
+            map.fitBounds(bounds);
+        }
+    </script>
+</head>
+<body>
+<div id="map"></div>
+<div id="panel">
+
+    <div id="input"></div>
+
+    <ul id="places"></ul>
+    <!--<button id="more">More results</button>-->
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDl0h3qACat1Ocr9zAbQAmCk1oqATsGbjY&libraries=places&callback=initMap" async defer></script>
+
+<script>
+    var list = document.getElementById('places');
+    var input = document.getElementById('input');
+    list.onclick=function(e){
+        if(e.target.tagName.toLowerCase() == 'li'){
+            input.innerHTML = e.target.innerHTML;
+        }
+    }
+</script>
+</body>
+</html>
