@@ -5,7 +5,7 @@
   <title>Title</title>
 </head>
 <body>
-<div id="text"></div>
+<div id="text">位置：</div>
 <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.12&key=2137b6032cb0e1d714088e4091101056"></script>
 <script>
     mapObj = new AMap.Map('iCenter');
@@ -30,7 +30,7 @@
         AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
     });
     function onComplete(result){
-        document.getElementById('text').innerHTML = result.formattedAddress;
+        document.getElementById('text').innerHTML = '位置：'+result.formattedAddress;
     }
     function onError(error){}
 </script>
