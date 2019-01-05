@@ -34,7 +34,10 @@
         document.getElementById('text').innerHTML = result.formattedAddress;
     }
     function onError(error){
-        var text = JSON.stringify(error);
+        var text = '';
+        Object.keys(error).forEach(function(key){
+            text += key + ' : ' + error[key] + '<br/>';
+        });
         document.getElementById('error').innerHTML = text;
     }
 </script>
